@@ -1,5 +1,7 @@
 package org.virosms;
 
+import org.virosms.enums.State;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -24,25 +26,99 @@ public class GamePanel extends JPanel implements ActionListener {
     Timer timer;
     Random random;
 
+    State state = State.MENU;
+
+
+
     public GamePanel() {
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
-        startGame();
+        startMenu();
+    }
+
+    public void startMenu() {
+        // Set the game state to MENU
+        state = State.MENU;
+
+        // Handle key events for the menu
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (state == State.MENU) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        startGame(); // Start the game when Enter is pressed
+                    }
+                }
+            }
+        });
+
+        // Display the menu text
+        repaint();
     }
 
     public void startGame() {
-        newApple();
+        // Reset game variables
+        bodyParts = 6;
+        applesEaten = 0;
+        direction = 'R';
         running = true;
+
+        // Initialize or reset the timer
+        if (timer != null) {
+            timer.stop();
+        }
         timer = new Timer(DELAY, this);
         timer.start();
+
+        // Set the game state to GAME
+        state = State.START;
+
+        // Remove the key listener used for the menu
+
+        this.requestFocus();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        draw(g);
+
+        if (state == State.MENU) {
+            // Display the game title
+            g.setColor(Color.GREEN);
+            g.setFont(new Font("Ink Free", Font.BOLD, 80));
+            FontMetrics metrics1 = getFontMetrics(g.getFont());
+            g.drawString("Snake Game" , (SCREEN_WIDTH - metrics1.stringWidth("Snake Game")) / 2, g.getFont().getSize());
+
+            // Display the game menu text
+            g.setColor(Color.white);
+            g.setFont(new Font("Ink Free", Font.BOLD, 40));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            String menuText = "Press Enter to Start";
+            g.drawString(menuText, (SCREEN_WIDTH - metrics.stringWidth(menuText)) / 2, SCREEN_HEIGHT / 2);
+
+            // Display the game instructions
+            g.setColor(Color.white);
+            g.setFont(new Font("Ink Free", Font.ITALIC, 20));
+            FontMetrics metrics2 = getFontMetrics(g.getFont());
+            String instructions = "Use arrow keys to move";
+            g.drawString(instructions, (SCREEN_WIDTH - metrics2.stringWidth(instructions)) / 2, SCREEN_HEIGHT / 2 + 50);
+
+            //Display the game author
+            g.setColor(Color.white);
+            g.setFont(new Font("Ink Free", Font.ITALIC|Font.BOLD, 20));
+            FontMetrics metrics3 = getFontMetrics(g.getFont());
+            String author = "Author: VirosMs";
+            g.drawString(author, (SCREEN_WIDTH - metrics3.stringWidth(author)) / 2, SCREEN_HEIGHT -100);
+
+        } else if (state == State.START) {
+            // Your existing game rendering code
+            draw(g);
+        } else if (state == State.GAME_OVER) {
+            // Your existing game over code
+            gameOver(g);
+        }
     }
 
     public void draw(Graphics g) {
@@ -72,7 +148,7 @@ public class GamePanel extends JPanel implements ActionListener {
             FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten)) / 2, g.getFont().getSize());
         } else {
-            gameOver(g);
+            paintComponent(g);
         }
     }
 
@@ -133,6 +209,7 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         if (!running) {
+            state = State.GAME_OVER;
             timer.stop();
         }
     }
@@ -158,13 +235,14 @@ public class GamePanel extends JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        if (running) {
-            move();
-            checkApple();
-            checkCollisions();
+        if (state == State.START) {
+            if (running) {
+                move();
+                checkApple();
+                checkCollisions();
+            }
+            repaint();
         }
-        repaint();
     }
 
     public class MyKeyAdapter extends KeyAdapter {
