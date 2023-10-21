@@ -40,9 +40,11 @@ VirosMs
 
 **Installation**
 
-1. Ensure you have Java installed on your computer.
-2. Clone this repository or download the source code.
-3. Compile and run the Java program.
+ Ensure you have Java installed on your computer.
+ 
+* Option 1: Clone this repository or download the source code and compile and run the Java program.
+
+* Option 2: Download the pre-compiled JAR file from [[link to JAR file](https://www.dropbox.com/scl/fi/me64pggvo3f51qqzc2ssy/SnakeJava.jar?rlkey=zr4rjzobki2lph8eantvhth8r&dl=0)] and run it.
 
 **Acknowledgments**
 
