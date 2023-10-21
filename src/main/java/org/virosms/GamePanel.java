@@ -23,8 +23,11 @@ public class GamePanel extends JPanel implements ActionListener {
     int appleY;
     char direction = 'R';
     boolean running = false;
+
+    boolean mesh = false;
     Timer timer;
     Random random;
+
 
     State state = State.MENU;
 
@@ -102,10 +105,10 @@ public class GamePanel extends JPanel implements ActionListener {
 
             // Display the game instructions
             g.setColor(Color.white);
-            g.setFont(new Font("Ink Free", Font.ITALIC, 20));
+            g.setFont(new Font("Roboto Condensed", Font.BOLD, 20));
             FontMetrics metrics2 = getFontMetrics(g.getFont());
             String instructions = "Use arrow keys to move";
-            g.drawString(instructions, (SCREEN_WIDTH - metrics2.stringWidth(instructions)) / 2, SCREEN_HEIGHT / 2 + 50);
+            g.drawString(instructions, (SCREEN_WIDTH - metrics2.stringWidth(instructions)) / 2, SCREEN_HEIGHT * 2 / 3);
 
             //Display the game author
             g.setColor(Color.white);
@@ -134,11 +137,12 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void draw(Graphics g) {
         if (running) {
-            /*
-            for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
-                g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
-                g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
-            }*/
+            if (mesh) {
+                for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+                    g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+                    g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
+                }
+            }
 
 
             g.setColor(Color.red);
@@ -253,7 +257,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 g.setColor(new Color(0, 180, 180));
                 g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
             }
-        }else{
+        } else {
             if (i == 0) {
                 g.setColor(Color.MAGENTA);
                 g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
@@ -320,6 +324,7 @@ public class GamePanel extends JPanel implements ActionListener {
                         direction = 'D';
                     }
                 }
+                case KeyEvent.VK_M -> mesh = !mesh;
             }
         }
     }
