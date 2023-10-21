@@ -7,7 +7,23 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
-
+/**
+ * The GamePanel class is responsible for the game logic and rendering.
+ * <p> It extends JPanel and implements ActionListener. </p>
+ * <p> It contains the game loop and the logic for the snake movement, apple spawning, collision detection, and score tracking. </p>
+ * <p> It also contains the logic for the game menu and game over screen. </p>
+ * <p> It uses a timer to trigger the game loop. </p>
+ * <p> It uses a key listener to handle user input. </p>
+ *
+ * @see JPanel
+ * @see ActionListener
+ * @see Timer
+ * @see KeyListener
+ * @see GameFrame
+ * @see State
+ * @see MyKeyAdapter
+ * @see GamePanel#startMenu()
+ */
 public class GamePanel extends JPanel implements ActionListener {
 
     static final int SCREEN_WIDTH = 600;
@@ -31,7 +47,17 @@ public class GamePanel extends JPanel implements ActionListener {
 
     State state = State.MENU;
 
-
+    /**
+     * Constructor for the GamePanel class.
+     * <p> It sets the preferred size of the panel, the background color, and the key listener. </p>
+     * <p> It also creates a new Random object. </p>
+     *
+     * @see Dimension
+     * @see Color
+     * @see KeyListener
+     * @see Random
+     * @see MyKeyAdapter
+     */
     public GamePanel() {
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -41,6 +67,15 @@ public class GamePanel extends JPanel implements ActionListener {
         startMenu();
     }
 
+    /**
+     * Start the game menu.
+     * <p> It sets the game state to MENU. </p>
+     * <p> It adds a key listener to handle key events for the menu. </p>
+     * <p> It displays the menu text. </p>
+     *
+     * @see State
+     * @see KeyListener
+     */
     public void startMenu() {
         // Set the game state to MENU
         state = State.MENU;
@@ -61,6 +96,19 @@ public class GamePanel extends JPanel implements ActionListener {
         repaint();
     }
 
+    /**
+     * Start the game.
+     * <p> It sets the game state to START. </p>
+     * <p> It resets the game variables. </p>
+     * <p> It creates a new timer. </p>
+     * <p> It creates a new apple. </p>
+     * <p> It removes the key listener used for the menu. </p>
+     *
+     * @see State
+     * @see Timer
+     * @see MyKeyAdapter
+     * @see GamePanel#startMenu()
+     */
     public void startGame() {
         // Reset game variables
         bodyParts = 6;
@@ -86,6 +134,15 @@ public class GamePanel extends JPanel implements ActionListener {
         this.requestFocus();
     }
 
+    /**
+     * Paint the game panel.
+     * <p> It displays the game title, menu text, instructions, and author. </p>
+     * <p> It also displays the game over screen. </p>
+     * <p> It also calls the draw method. </p>
+     *
+     * @param g Graphics object to draw with
+     * @see Graphics
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -135,6 +192,15 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Draw the game panel.
+     * <p> It displays the snake, apple, score, and mesh. </p>
+     * <p> It also calls the checkScoreAndChangeColor method. </p>
+     *
+     *
+     * @param g Graphics object to draw with
+     * @see Graphics
+     */
     public void draw(Graphics g) {
         if (running) {
             if (mesh) {
@@ -161,11 +227,24 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Create a new apple.
+     * <p> It sets the apple coordinates to a random location on the screen. </p>
+     *
+     * @see Random
+     */
     public void newApple() {
         appleX = random.nextInt(SCREEN_WIDTH / UNIT_SIZE) * UNIT_SIZE;
         appleY = random.nextInt(SCREEN_HEIGHT / UNIT_SIZE) * UNIT_SIZE;
     }
 
+    /**
+     * Move the snake.
+     * <p> It moves the snake body parts. </p>
+     * <p> It also calls the checkScoreSpeed method. </p>
+     *
+     * @see GamePanel#checkScoreSpeed()
+     */
     public void move() {
         for (int i = bodyParts; i > 0; i--) {
             x[i] = x[i - 1];
@@ -182,6 +261,13 @@ public class GamePanel extends JPanel implements ActionListener {
         checkScoreSpeed();
     }
 
+    /**
+     * Check if the snake has eaten an apple.
+     * <p> It increases the snake body parts and apples eaten. </p>
+     * <p> It also calls the newApple method. </p>
+     *
+     * @see GamePanel#newApple()
+     */
     public void checkApple() {
         if ((x[0] == appleX) && (y[0] == appleY)) {
             bodyParts++;
@@ -190,6 +276,13 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Check if the snake has collided with something.
+     * <p> It checks if the snake head has collided with the snake body or the screen borders. </p>
+     * <p> It sets the game state to GAME_OVER if the snake has collided with something. </p>
+     *
+     * @see State
+     */
     public void checkCollisions() {
         //this checks if head collides with body
         for (int i = bodyParts; i > 0; i--) {
@@ -300,7 +393,23 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * The MyKeyAdapter class is responsible for handling key events.
+     * Inner class of GamePanel.
+     * <p> It extends KeyAdapter. </p>
+     * <p> It handles key events for the game menu. </p>
+     * <p> It handles key events for the game over screen. </p>
+     *
+     * @see KeyAdapter
+     */
     public class MyKeyAdapter extends KeyAdapter {
+        /**
+         * Invoked when a key has been pressed.
+         * <p> It handles key events for the game menu. </p>
+         * <p> It handles key events for the game over screen. </p>
+         *
+         * @param e the event to be processed
+         */
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
