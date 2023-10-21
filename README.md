@@ -1,6 +1,8 @@
 # Snake Game
 
 This is a simple Snake game implemented in Java, created by VirosMs.
+![image](https://github.com/VirosMortais/SnakeJava/assets/94723454/e039e3c6-17df-4e97-bdfa-9f2ae474f0c1)
+
 
 **Description**
 
