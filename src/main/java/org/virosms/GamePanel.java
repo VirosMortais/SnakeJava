@@ -29,7 +29,6 @@ public class GamePanel extends JPanel implements ActionListener {
     State state = State.MENU;
 
 
-
     public GamePanel() {
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -92,7 +91,7 @@ public class GamePanel extends JPanel implements ActionListener {
             g.setColor(Color.GREEN);
             g.setFont(new Font("Ink Free", Font.BOLD, 80));
             FontMetrics metrics1 = getFontMetrics(g.getFont());
-            g.drawString("Snake Game" , (SCREEN_WIDTH - metrics1.stringWidth("Snake Game")) / 2, g.getFont().getSize());
+            g.drawString("Snake Game", (SCREEN_WIDTH - metrics1.stringWidth("Snake Game")) / 2, g.getFont().getSize());
 
             // Display the game menu text
             g.setColor(Color.white);
@@ -110,10 +109,10 @@ public class GamePanel extends JPanel implements ActionListener {
 
             //Display the game author
             g.setColor(Color.white);
-            g.setFont(new Font("Ink Free", Font.ITALIC|Font.BOLD, 20));
+            g.setFont(new Font("Ink Free", Font.ITALIC | Font.BOLD, 20));
             FontMetrics metrics3 = getFontMetrics(g.getFont());
             String author = "Author: VirosMs";
-            g.drawString(author, (SCREEN_WIDTH - metrics3.stringWidth(author)) / 2, SCREEN_HEIGHT -100);
+            g.drawString(author, (SCREEN_WIDTH - metrics3.stringWidth(author)) / 2, SCREEN_HEIGHT - 100);
 
         } else if (state == State.START) {
             // Your existing game rendering code
@@ -146,13 +145,7 @@ public class GamePanel extends JPanel implements ActionListener {
             g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
 
             for (int i = 0; i < bodyParts; i++) {
-                if (i == 0) {
-                    g.setColor(Color.green);
-                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-                } else {
-                    g.setColor(new Color(45, 180, 0));
-                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-                }
+                checkScoreAndChangeColor(g, i);
             }
 
             g.setColor(Color.red);
@@ -229,20 +222,61 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     /**
+     * Check the score and change the color of the snake.
+     * <p> The snake color changes every 10 apples eaten. </p>
+     *
+     * @param g Graphics object to draw with
+     * @param i Index of the snake part to draw
+     */
+    public void checkScoreAndChangeColor(Graphics g, int i) {
+        if (applesEaten < 10) {
+            if (i == 0) {
+                g.setColor(Color.green);
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            } else {
+                g.setColor(new Color(45, 180, 0));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            }
+        } else if (applesEaten < 20) {
+            if (i == 0) {
+                g.setColor(Color.yellow);
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            } else {
+                g.setColor(new Color(220, 180, 0));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            }
+        } else if (applesEaten < 30) {
+            if (i == 0) {
+                g.setColor(new Color(0, 180, 255));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            } else {
+                g.setColor(new Color(0, 180, 180));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            }
+        }else{
+            if (i == 0) {
+                g.setColor(Color.MAGENTA);
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            } else {
+                g.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            }
+        }
+    }
+
+    /**
      * Check the score and speed up the game if necessary.
      * <p> The game speed is increased by reducing the delay between timer events. </p>
      * <p> The game speed is increased by 1% for every 10 apples eaten. </p>
-     * <p> The game speed is capped at a 40% increase. </p>
-     *
+     * <p> The game speed is capped at a 20% increase. </p>
      */
     public void checkScoreSpeed() {
         if (applesEaten % 10 == 0) {
-            int maxSpeedup = (int) (DELAY * 0.4); // Máximo aumento del 30%
+            int maxSpeedup = (int) (DELAY * 0.2); // Máximo aumento del 20%
             int newDelay = Math.max(DELAY - applesEaten / 10, DELAY - maxSpeedup);
             timer.setDelay(newDelay);
         }
     }
-
 
 
     /**
