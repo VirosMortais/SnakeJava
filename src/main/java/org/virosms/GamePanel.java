@@ -70,11 +70,14 @@ public class GamePanel extends JPanel implements ActionListener {
         if (timer != null) {
             timer.stop();
         }
+        // Create a new timer
         timer = new Timer(DELAY, this);
         timer.start();
 
         // Set the game state to GAME
         state = State.START;
+
+        newApple(); // Create a new apple
 
         // Remove the key listener used for the menu
 
