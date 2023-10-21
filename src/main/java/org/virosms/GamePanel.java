@@ -119,8 +119,17 @@ public class GamePanel extends JPanel implements ActionListener {
             // Your existing game rendering code
             draw(g);
         } else if (state == State.GAME_OVER) {
-            // Your existing game over code
-            gameOver(g);
+            //Score text
+            g.setColor(Color.red);
+            g.setFont(new Font("Ink Free", Font.BOLD, 40));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten)) / 2, g.getFont().getSize());
+
+            //Game Over text
+            g.setColor(Color.red);
+            g.setFont(new Font("Ink Free", Font.BOLD, 75));
+            FontMetrics metrics1 = getFontMetrics(g.getFont());
+            g.drawString("Game Over", (SCREEN_WIDTH - metrics1.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
         }
     }
 
@@ -172,6 +181,8 @@ public class GamePanel extends JPanel implements ActionListener {
             case 'L' -> x[0] = x[0] - UNIT_SIZE;
             case 'R' -> x[0] = x[0] + UNIT_SIZE;
         }
+
+        checkScoreSpeed();
     }
 
     public void checkApple() {
@@ -217,19 +228,22 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    public void gameOver(Graphics g) {
-        //Score text
-        g.setColor(Color.red);
-        g.setFont(new Font("Ink Free", Font.BOLD, 40));
-        FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten)) / 2, g.getFont().getSize());
-
-        //Game Over text
-        g.setColor(Color.red);
-        g.setFont(new Font("Ink Free", Font.BOLD, 75));
-        FontMetrics metrics1 = getFontMetrics(g.getFont());
-        g.drawString("Game Over", (SCREEN_WIDTH - metrics1.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
+    /**
+     * Check the score and speed up the game if necessary.
+     * <p> The game speed is increased by reducing the delay between timer events. </p>
+     * <p> The game speed is increased by 1% for every 10 apples eaten. </p>
+     * <p> The game speed is capped at a 40% increase. </p>
+     *
+     */
+    public void checkScoreSpeed() {
+        if (applesEaten % 10 == 0) {
+            int maxSpeedup = (int) (DELAY * 0.4); // Máximo aumento del 30%
+            int newDelay = Math.max(DELAY - applesEaten / 10, DELAY - maxSpeedup);
+            timer.setDelay(newDelay);
+        }
     }
+
+
 
     /**
      * Invoked when an action occurs.
